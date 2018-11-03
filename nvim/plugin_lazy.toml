@@ -1,0 +1,46 @@
+
+[[plugins]] # Async Shell Commands output to Quickfix window.
+repo = 'skywind3000/asyncrun.vim'
+hook_add = '''
+  " Open Quickfix window automatically
+  augroup MyGroup
+    autocmd!
+    autocmd User AsyncRunStart call asyncrun#quickfix_toggle(8,1)
+  augroup END
+'''
+
+
+#### deoplete.nvim
+
+# Python
+[[plugins]]
+repo = 'zchee/deoplete-jedi'
+on_ft = 'python'
+
+# C#
+[[plugins]]
+repo = 'OrangeT/vim-csharp'
+on_ft = 'cs'
+
+# Java
+[[plugins]]
+repo = 'artur-shaik/vim-javacomplete2'
+on_ft = 'java'
+
+# Swift
+
+[[plugins]] # Syntax and indent files for Swift
+repo = 'keith/swift.vim'
+on_ft = 'swift'
+
+[[plugins]]
+repo = 'mitsuse/autocomplete-swift'
+on_ft = 'swift'
+hook_add = '''
+  augroup lang_swift
+    autocmd!
+    autocmd FileType swift imap <buffer> <C-k> <Plug>(autocomplete_swift_jump_to_placeholder)
+    autocmd BufNewFile,BufRead *.swift set filetype=swift
+  augroup END
+'''
+
