@@ -30,7 +30,7 @@ execute 'set runtimepath^=' . fnamemodify(s:dein_repo, ':p')
 if filereadable(s:dein_repo . '/README.md') && dein#load_state(s:dein_root)
   call dein#begin(s:dein_root)
 
-  call dein#add(s:dein_root)
+  call dein#add(s:dein_repo)
   call dein#load_toml(s:dein_config . '/plugin.toml', {'lazy': 0})
   call dein#load_toml(s:dein_config . '/plugin_lazy.toml', {'lazy': 1})
 
