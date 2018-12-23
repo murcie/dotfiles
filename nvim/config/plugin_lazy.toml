@@ -44,3 +44,11 @@ hook_add = '''
   augroup END
 '''
 
+[[plugins]]
+repo = 'phpactor/phpactor'
+on_ft = ['php']
+build = 'composer install'
+
+[[plugins]]
+repo = 'kristijanhusak/deoplete-phpactor'
+on_ft = ['php']

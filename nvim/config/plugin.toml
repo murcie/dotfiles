@@ -72,6 +72,14 @@ nnoremap <silent> [denite]p :<C-u>Denite
       \ -resume -buffer-name=search-buffer-denite -select=-1 -imediately<CR>
 '''
 
+[[plugins]]
+repo = 'junegunn/fzf'
+build = './install --all'
+merged = 0
+
+[[plugins]]
+repo = 'junegunn/fzf.vim'
+depends = 'fzf'
 
 #### Syntax, Color scheme
 
@@ -102,6 +110,7 @@ hook_add = '''
         \   'javascript': ['eslint'],
         \   'json': ['jsonlint'],
         \   'python': ['flake8'],
+        \   'sh': ['shellcheck'],
         \   'swift': ['swiftlint'],
         \   'vim': ['vint'],
         \}
@@ -110,7 +119,6 @@ hook_add = '''
         \   'cpp': ['clang-format'],
         \   'html': ['prettier'],
         \   'javascript': ['prettier'],
-        \   'json': ['jq'],
         \   'markdown': ['prettier'],
         \   'python': ['yapf'],
         \   'swift': ['swiftformat'],

@@ -1,6 +1,8 @@
 filetype off
 filetype plugin indent off
 
+scriptencoding utf-8
+
 " use binary installed on Homebrew
 let g:python_host_prog='/usr/local/bin/python2'
 let g:python3_host_prog='/usr/local/bin/python3'
