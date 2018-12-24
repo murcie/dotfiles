@@ -148,18 +148,87 @@ hook_add = '''
   endfunction
 '''
 
-
-#### Completion
+[[plugins]]
+repo = 'prabirshrestha/async.vim'
 
 [[plugins]]
-repo = 'Shougo/deoplete.nvim'
+repo = 'prabirshrestha/vim-lsp'
+depends = ['async.vim']
+on_ft = ['typescript', 'python', 'go', 'ruby', 'c', 'cpp']
 hook_add = '''
-  let g:deoplete#enable_at_startup = 1
-  augroup deoplete
-    autocmd!
-    autocmd FileType java setlocal omnifunc=javacomplete#Complete
+" https://gist.github.com/mattn/4583ef3e082691275b79674fedac357c
+if executable('typescript-language-server')
+  augroup LspTypeScript
+    au!
+    autocmd User lsp_setup call lsp#register_server({
+        \ 'name': 'typescript-language-server',
+        \ 'cmd': {server_info->[&shell, &shellcmdflag, 'typescript-language-server --stdio']},
+        \ 'root_uri':{server_info->lsp#utils#path_to_uri(lsp#utils#find_nearest_parent_file_directory(lsp#utils#get_buffer_path(), 'tsconfig.json'))},
+        \ 'whitelist': ['typescript'],
+        \ })
+    autocmd FileType typescript setlocal omnifunc=lsp#complete
   augroup END
+endif
+if executable('pyls')
+  " pip install python-language-server
+  augroup LspPython
+    au!
+    autocmd User lsp_setup call lsp#register_server({
+        \ 'name': 'pyls',
+        \ 'cmd': {server_info->['pyls']},
+        \ 'whitelist': ['python'],
+        \ })
+    autocmd FileType python setlocal omnifunc=lsp#complete
+  augroup END
+endif
+if executable('golsp')
+  augroup LspGo
+    au!
+    autocmd User lsp_setup call lsp#register_server({
+        \ 'name': 'go-lang',
+        \ 'cmd': {server_info->['golsp']},
+        \ 'whitelist': ['go'],
+        \ })
+    autocmd FileType go setlocal omnifunc=lsp#complete
+    autocmd FileType python,go nmap gd <plug>(lsp-definition)
+  augroup END
+elseif executable('go-langserver')
+  augroup LspGo
+    au!
+    autocmd User lsp_setup call lsp#register_server({
+        \ 'name': 'go-lang',
+        \ 'cmd': {server_info->['go-langserver', '-mode', 'stdio', '-gocodecompletion']},
+        \ 'whitelist': ['go'],
+        \ })
+    autocmd FileType go setlocal omnifunc=lsp#complete
+  augroup END
+endif
+if executable('solargraph')
+  augroup LspRuby
+    au!
+    autocmd User lsp_setup call lsp#register_server({
+        \ 'name': 'solargraph',
+        \ 'cmd': {server_info->[&shell, &shellcmdflag, 'solargraph stdio']},
+        \ 'whitelist': ['ruby'],
+        \ })
+    autocmd FileType ruby setlocal omnifunc=lsp#complete
+  augroup END
+endif
+if executable('clangd')
+  augroup LspCpp
+    au!
+    autocmd User lsp_setup call lsp#register_server({
+        \ 'name': 'clangd',
+        \ 'cmd': {server_info->['clangd']},
+        \ 'whitelist': ['c', 'cpp', 'objc', 'objcpp'],
+        \ })
+    autocmd FileType c,cpp setlocal omnifunc=lsp#complete
+  augroup END
+endif
 '''
-hook_done_update = '''
-  UpdateRemotePlugins
-'''
+
+[[plugins]]
+repo = 'prabirshrestha/asyncomplete.vim'
+
+[[plugins]]
+repo = 'prabirshrestha/asyncomplete-lsp.vim'
