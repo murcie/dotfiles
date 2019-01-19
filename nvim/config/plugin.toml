@@ -119,6 +119,7 @@ hook_add = '''
         \   'cpp': ['clang-format'],
         \   'html': ['prettier'],
         \   'javascript': ['prettier'],
+        \   'json': ['prettier'],
         \   'markdown': ['prettier'],
         \   'python': ['yapf'],
         \   'swift': ['swiftformat'],
