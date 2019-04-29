@@ -74,6 +74,15 @@ nnoremap <silent> [denite]p :<C-u>Denite
       \ -resume -buffer-name=search-buffer-denite -select=-1 -imediately<CR>
 '''
 
+[[plugins]] # Open URI with your favorite browser from your most favorite editor
+# https://github.com/tyru/open-browser.vim.git
+repo = 'tyru/open-browser.vim'
+hook_add = '''
+  let g:netrw_nogx = 1
+  nmap gx <Plug>(openbrowser-smart-search)
+  vmap gx <Plug>(openbrowser-smart-search)
+'''
+
 [[plugins]]
 repo = 'previm/previm'
 hook_add = '''
@@ -119,6 +128,7 @@ repo = 'tpope/vim-fugitive'
 #### Lint
 
 [[plugins]] # ALE: Asynchronous Lint Engine
+# https://github.com/w0rp/ale
 repo = 'w0rp/ale'
 hook_add = '''
   " Keep the sign gutter open at all times
