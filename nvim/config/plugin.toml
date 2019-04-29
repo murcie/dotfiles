@@ -34,12 +34,14 @@ hook_add = '''
         \       ['linter_status'],
         \       ['linter_engines'],
         \       ['fixer_engines'],
+        \       ['lsp_engine'],
         \     ],
         \   },
         \ 'component_function': {
         \     'linter_status': 'MyLinterStatus',
         \     'linter_engines': 'MyLinterEngines',
         \     'fixer_engines': 'MyFixerEngines',
+        \     'lsp_engine': 'MyLspActiveServerName'
         \   }
         \}
 '''
@@ -70,6 +72,21 @@ nnoremap <silent> [denite]n :<C-u>Denite
 " Back to the previous result of Denite-grep
 nnoremap <silent> [denite]p :<C-u>Denite
       \ -resume -buffer-name=search-buffer-denite -select=-1 -imediately<CR>
+'''
+
+[[plugins]]
+repo = 'previm/previm'
+hook_add = '''
+  if has('win32')
+    let g:previm_open_cmd = 'start chrome'
+  elseif has ('macunix')
+    let g:previm_open_cmd = 'open -a "Google Chrome"'
+  endif
+
+  augroup PrevimSettings
+    autocmd!
+    autocmd BufNewFile,BufRead *.{md,mdwn,mkd,mkdn,mark*} set filetype=markdown
+  augroup END
 '''
 
 [[plugins]]
@@ -139,13 +156,23 @@ hook_add = '''
     " return string which is list of enabled linters.
     let l:linters = has_key(g:ale_linter, &filetype) ?
           \ join(g:ale_linter[&filetype], ',') : '-'
-    return printf('Linter:%s', l:linters)
+    return printf('Lint<%s>', l:linters)
   endfunction
   function! MyFixerEngines() abort
     " return string which is list of enabled fixers.
     let l:fixers= has_key(g:ale_fixers, &filetype) ?
           \ join(g:ale_fixers[&filetype], ',') : '-'
-    return printf('Fixer:%s', l:fixers)
+    return printf('Fix<%s>', l:fixers)
+  endfunction
+  function! MyLspActiveServerName() abort
+    " return string which is active lsp server name
+    let s:status_lines = split(lsp#get_server_status(), '\n')
+    let s:active_server_list_raw = map(s:status_lines, {idx, val ->
+                \   matchstr(val, '^\zs[^:]*\ze:\srunning.*$', 0)
+                \ })
+    let s:active_server_list = filter(s:active_server_list_raw, {idx, val -> val !=# ''})
+    let s:active_server_name = empty(s:active_server_list) ? '-': s:active_server_list[0]
+    return 'Lsp<' . s:active_server_name . '>'
   endfunction
 '''
 
@@ -157,6 +184,8 @@ repo = 'prabirshrestha/vim-lsp'
 depends = ['async.vim']
 on_ft = ['typescript', 'python', 'go', 'ruby', 'c', 'cpp']
 hook_add = '''
+"disable diagnotics because using ALE
+let g:lsp_diagnotics_enabled = 0
 " https://gist.github.com/mattn/4583ef3e082691275b79674fedac357c
 if executable('typescript-language-server')
   augroup LspTypeScript
